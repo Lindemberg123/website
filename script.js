@@ -11,13 +11,13 @@ function initializeIMA() {
     videoElement
   );
   adsLoader = new google.ima.AdsLoader(adDisplayContainer);
-  
+
   adsLoader.addEventListener(
     google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
     onAdsManagerLoaded,
     false
   );
-  
+
   adsLoader.addEventListener(
     google.ima.AdErrorEvent.Type.AD_ERROR,
     onAdError,
@@ -63,7 +63,7 @@ function requestAd() {
       timeLeft--;
       const timerSpan = document.getElementById('timer');
       if (timerSpan) timerSpan.textContent = timeLeft;
-      
+
       if (timeLeft <= 0) {
         clearInterval(timerInterval);
         const closeButton = document.getElementById('closeButton');
@@ -85,19 +85,19 @@ function createDrop(value) {
   if (value <= 0) return;
   dropValue = value;
   dropClaimed = false;
-  
+
   const sections = ['sobre', 'coins'];
   sections.forEach(sectionId => {
     const section = sectionId === 'sobre' ? 
       document.querySelector('.sobre') : 
       document.getElementById(sectionId);
-    
+
     if (section) {
       const existingDrop = section.querySelector('.drop-button');
       if (existingDrop) {
         existingDrop.remove();
       }
-      
+
       const dropButton = document.createElement('button');
       dropButton.innerHTML = 'RESGATAR DROP';
       dropButton.className = 'drop-button';
@@ -109,17 +109,17 @@ function createDrop(value) {
 
 function claimDrop() {
   if (dropClaimed) return;
-  
+
   userCoins += dropValue;
   localStorage.setItem('userCoins', userCoins);
   document.getElementById('coinCount').textContent = userCoins;
-  
+
   const dropButton = document.querySelector('.drop-button');
   dropButton.innerHTML = 'JÁ RESGATADO';
   dropButton.disabled = true;
   dropButton.style.opacity = '0.5';
   dropClaimed = true;
-  
+
   alert(`Você resgatou ${dropValue} coins!`);
 }
 let isWatchingForCoins = false;
@@ -131,20 +131,20 @@ function closeAd() {
   if (iframe) {
     iframe.src = '';
   }
-  
+
   if (isWatchingForCoins) {
     const currentTime = Date.now();
     const watchTime = currentTime - adStartTime;
-    
+
     if (watchTime < 10000) { // Menos de 10 segundos
       banUser();
       return;
     }
-    
+
     showRewardButton();
     return; // Não fecha o container para mostrar o botão de recompensa
   }
-  
+
   const adContainer = document.getElementById('adContainer');
   adContainer.style.display = 'none';
   isAdPlaying = false;
@@ -159,6 +159,9 @@ function banUser() {
   window.location.href = window.location.href;
 }
 
+let wheelChance = 50; // 50% chance default
+let adTimer = 50; // 50 seconds default
+
 function showAdForCoins() {
   const storedBanEndTime = localStorage.getItem('banEndTime');
   if (storedBanEndTime && Date.now() < parseInt(storedBanEndTime)) {
@@ -167,10 +170,77 @@ function showAdForCoins() {
     return;
   }
   localStorage.removeItem('banEndTime');
-  
+
   isWatchingForCoins = true;
   adStartTime = Date.now();
-  requestAd();
+
+  const adContainer = document.getElementById('adContainer');
+  adContainer.style.display = 'block';
+
+  let timeLeft = adTimer;
+  const timerInterval = setInterval(() => {
+    timeLeft--;
+    const timerDisplay = document.getElementById('adTimer');
+    if (timerDisplay) timerDisplay.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      showRewardButton();
+    }
+  }, 1000);
+
+  adContainer.innerHTML = `
+    <div style="text-align:center;padding:20px;color:white;">
+      <h3>Assistindo anúncio...</h3>
+      <p>Tempo restante: <span id="adTimer">${adTimer}</span>s</p>
+      <div style="width:300px;height:250px;background:#333;margin:20px auto;display:flex;align-items:center;justify-content:center;">
+        Anúncio Aleatório
+      </div>
+    </div>
+  `;
+}
+
+function showRewardButton() {
+  const reward = Math.floor(Math.random() * 1000) + 100; // 100-1100 coins
+  const showWheel = Math.random() * 100 < wheelChance;
+
+  const adContainer = document.getElementById('adContainer');
+  adContainer.innerHTML = `
+    <div style="text-align:center;padding:20px;color:white;">
+      <h3>Parabéns!</h3>
+      <p>Você ganhou ${reward} coins!</p>
+      ${showWheel ? '<button onclick="spinWheel()" class="reward-button">Girar Roleta Bônus!</button>' : ''}
+      <button onclick="closeAd()" class="close-button">Fechar</button>
+    </div>
+  `;
+
+  userCoins += reward;
+  localStorage.setItem('userCoins', userCoins);
+  document.getElementById('coinCount').textContent = userCoins;
+}
+
+function spinWheel() {
+  const wheelContainer = document.getElementById('adContainer');
+  wheelContainer.innerHTML = `
+    <div style="text-align:center;padding:20px;color:white;">
+      <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzM2YzBjMzRlZDE5NmM4MzY5YjQ5YzI5YzM3NWM5ZjY5ZTBjZDM5YyZlcD12MV9pbnRlcm5hbF9naWZzX2dpZklkJmN0PWc/3o7aDdjf5eIYZVXtC0/giphy.gif" 
+           style="max-width:300px;border-radius:10px;">
+    </div>
+  `;
+
+  setTimeout(() => {
+    const wheelReward = Math.floor(Math.random() * 10001); // 0-10000 coins
+    wheelContainer.innerHTML = `
+      <div style="text-align:center;padding:20px;color:white;">
+        <h3>Resultado da Roleta!</h3>
+        <p>Você ganhou ${wheelReward} coins extras!</p>
+        <button onclick="closeAd()" class="close-button">Fechar</button>
+      </div>
+    `;
+    userCoins += wheelReward;
+    localStorage.setItem('userCoins', userCoins);
+    document.getElementById('coinCount').textContent = userCoins;
+  }, 3000);
 }
 
 function showRewardButton() {
@@ -189,7 +259,7 @@ function claimReward() {
   localStorage.setItem('userCoins', userCoins);
   document.getElementById('coinCount').textContent = userCoins;
   document.getElementById('adContainer').style.display = 'none';
-  
+
   if (userCoins >= 10) {
     document.getElementById('placeAdSection').style.display = 'block';
   }
@@ -199,7 +269,7 @@ function submitAd() {
   const videoUrl = document.getElementById('adVideoUrl').value;
   const description = document.getElementById('adDescription').value;
   const adCost = 10;
-  
+
   if (!description) {
     alert('Por favor, adicione uma descrição para o anúncio');
     return;
@@ -209,7 +279,7 @@ function submitAd() {
     alert(`Você precisa de ${adCost} coins para publicar um anúncio!`);
     return;
   }
-  
+
   userCoins -= adCost;
   localStorage.setItem('userCoins', userCoins);
   document.getElementById('coinCount').textContent = userCoins;
@@ -220,7 +290,7 @@ function submitAd() {
     description: description,
     videoUrl: videoUrl
   };
-  
+
   // Atualizar ads.json com o novo anúncio
   fetch('ads.json')
     .then(response => response.json())
@@ -254,12 +324,12 @@ function authorizeDiscord() {
 function onAdsManagerLoaded(adsManagerLoadedEvent) {
   const adsRenderingSettings = new google.ima.AdsRenderingSettings();
   adsManager = adsManagerLoadedEvent.getAdsManager(videoElement, adsRenderingSettings);
-  
+
   adsManager.addEventListener(google.ima.AdEvent.Type.COMPLETE, () => {
     document.getElementById('adContainer').style.display = 'none';
     isAdPlaying = false;
   });
-  
+
   try {
     adDisplayContainer.initialize();
     adsManager.init(640, 360, google.ima.ViewMode.NORMAL);
@@ -290,14 +360,26 @@ function showRandomAd() {
 // Mostrar anúncios a cada 60 segundos
 setInterval(showRandomAd, 60000);
 
+function handleImageError(img) {
+  img.onerror = null;
+  img.src = 'https://i.imgur.com/JxHPE6J.png'; // Imagem padrão
+}
+
 async function loadAds() {
   const adSpaces = document.querySelectorAll('.ad-space');
-  
+
+  // Adicionar tratamento de erro para ícones de servidor
+  document.querySelectorAll('.server-icon').forEach(icon => {
+    icon.onerror = function() {
+      handleImageError(this);
+    };
+  });
+
   try {
     // Carregar anúncios pagos do ads.json
     const response = await fetch('ads.json');
     const data = await response.json();
-    
+
     // Primeiro espaço - anúncio pago se existir
     if (adSpaces[0] && data.ads.length > 0) {
       const paidAd = data.ads[0];
@@ -331,15 +413,44 @@ async function loadAds() {
 document.addEventListener('DOMContentLoaded', () => {
   loadAds();
   showSection('sobre');
+  handleAuth();
 });
 
 function toggleMenu() {
-  document.getElementById("menuDropdown").classList.toggle("show");
+  const dropdown = document.getElementById("menuDropdown");
+  if (dropdown) {
+    dropdown.classList.toggle("show");
+
+    // Close dropdown when clicking outside
+    window.onclick = function(event) {
+      if (!event.target.matches('.menu-dots button')) {
+        const dropdowns = document.getElementsByClassName("dropdown-content");
+        for (let dropdown of dropdowns) {
+          if (dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+  }
 }
 
 function executeCommand() {
   const command = document.getElementById('adminCommand').value;
-  if (command.startsWith('/drop ')) {
+  if (command.startsWith('$sorte ')) {
+    const chance = parseInt(command.split(' ')[1]);
+    if (!isNaN(chance) && chance >= 0 && chance <= 100) {
+      wheelChance = chance;
+      alert(`Chance da roleta definida para ${chance}%`);
+    }
+  } else if (command === '$resetcro') {
+    adTimer = 50;
+    lastDailyClaim = 0;
+    localStorage.removeItem('lastDailyClaim');
+    wheelChance = 50;
+    updateDailyTimer();
+    alert('Cronômetros e chances resetados com sucesso!');
+  } else if (command.startsWith('/drop ')) {
     const value = parseInt(command.split(' ')[1]);
     if (!isNaN(value)) {
       createDrop(value);
@@ -349,7 +460,7 @@ function executeCommand() {
     return;
   }
   const parts = command.split(' ');
-  
+
   if (parts[0] === '$addcoins' && parts.length === 2) {
     const amount = parseInt(parts[1]);
     if (!isNaN(amount)) {
@@ -365,12 +476,12 @@ function executeCommand() {
       adSpace.innerHTML = '<div class="ad-link"><h3>Anúncios bloqueados por ' + seconds + ' segundos</h3></div>';
       adSpace.style.display = 'none';
     });
-    
+
     setTimeout(() => {
       loadAds();
       alert('Anúncios reativados!');
     }, seconds * 1000);
-    
+
     alert('Anúncios removidos por ' + seconds + ' segundos!');
   } else if (parts[0] === '$ajuda') {
     alert('Comandos disponíveis:\n\n' +
@@ -397,7 +508,7 @@ function executeCommand() {
   } else {
     alert('Comando inválido!\nDigite $ajuda para ver todos os comandos disponíveis');
   }
-  
+
   document.getElementById('adminCommand').value = '';
 }
 
@@ -413,32 +524,29 @@ document.addEventListener('keydown', function(e) {
 });
 
 function showSection(section) {
-  const sections = document.querySelectorAll('main > section, #jogo');
+  const sections = document.querySelectorAll('main > section, #jogo, #economia');
   const adSpaces = document.querySelectorAll('.ad-space');
   const adminSection = document.getElementById('adminSection');
-  
+
   sections.forEach(s => {
-    if ((section === 'sobre' && s.classList.contains('sobre')) || 
+    if (s.id === section || 
+        (section === 'sobre' && s.classList.contains('sobre')) || 
         (section === 'coins' && s.id === 'coins') ||
         (section === 'jogo' && s.id === 'jogo')) {
       s.style.display = 'block';
-      if (section === 'coins') {
-        if (adminSection) {
-          adminSection.style.display = 'none';
-        }
-      }
-    } else if (section === 'patrocinios') {
-      s.style.display = 'none';
-      adSpaces.forEach(ad => ad.style.display = 'block');
     } else {
       s.style.display = 'none';
     }
   });
-  
+
+  if (section === 'economia') {
+    showDaily();
+  }
+
   if (section === 'sobre' || section === 'coins') {
     adSpaces.forEach(ad => ad.style.display = 'none');
   }
-  
+
   toggleMenu();
 }
 
@@ -472,12 +580,12 @@ function placeBet() {
     alert('Valor inválido!');
     return;
   }
-  
+
   currentBet = betAmount;
   userCoins -= betAmount;
   document.getElementById('coinCount').textContent = userCoins;
   document.getElementById('bet-modal').style.display = 'none';
-  
+
   initializeBoard();
 }
 
@@ -485,28 +593,28 @@ function initializeBoard() {
   gameBoard = ['', '', '', '', '', '', '', '', ''];
   const board = document.getElementById('game-board');
   board.innerHTML = '';
-  
+
   for (let i = 0; i < 9; i++) {
     const cell = document.createElement('div');
     cell.className = 'cell';
     cell.onclick = () => makeMove(i);
     board.appendChild(cell);
   }
-  
+
   document.getElementById('game-status').textContent = '';
 }
 
 function makeMove(index) {
   if (gameBoard[index] !== '') return;
-  
+
   gameBoard[index] = 'X';
   updateBoard();
-  
+
   if (checkWinner()) {
     endGame('player');
     return;
   }
-  
+
   if (gameBoard.includes('')) {
     setTimeout(() => makeAIMove(), 500);
   } else {
@@ -527,10 +635,10 @@ function makeAIMove() {
       index = getBestMove();
       break;
   }
-  
+
   gameBoard[index] = 'O';
   updateBoard();
-  
+
   if (checkWinner()) {
     endGame('ai');
   } else if (!gameBoard.includes('')) {
@@ -547,88 +655,6 @@ function getRandomMove() {
 function getBestMove() {
   let bestScore = -Infinity;
   let bestMove;
-  
+
   for (let i = 0; i < 9; i++) {
-    if (gameBoard[i] === '') {
-      gameBoard[i] = 'O';
-      let score = minimax(gameBoard, 0, false);
-      gameBoard[i] = '';
-      if (score > bestScore) {
-        bestScore = score;
-        bestMove = i;
-      }
-    }
-  }
-  
-  return bestMove;
-}
-
-function minimax(board, depth, isMaximizing) {
-  if (checkWinner('O')) return 1;
-  if (checkWinner('X')) return -1;
-  if (!board.includes('')) return 0;
-  
-  if (isMaximizing) {
-    let bestScore = -Infinity;
-    for (let i = 0; i < 9; i++) {
-      if (board[i] === '') {
-        board[i] = 'O';
-        bestScore = Math.max(bestScore, minimax(board, depth + 1, false));
-        board[i] = '';
-      }
-    }
-    return bestScore;
-  } else {
-    let bestScore = Infinity;
-    for (let i = 0; i < 9; i++) {
-      if (board[i] === '') {
-        board[i] = 'X';
-        bestScore = Math.min(bestScore, minimax(board, depth + 1, true));
-        board[i] = '';
-      }
-    }
-    return bestScore;
-  }
-}
-
-function updateBoard() {
-  const cells = document.querySelectorAll('.cell');
-  cells.forEach((cell, i) => {
-    cell.textContent = gameBoard[i];
-  });
-}
-
-function checkWinner(player = null) {
-  const winPatterns = [
-    [0,1,2], [3,4,5], [6,7,8],
-    [0,3,6], [1,4,7], [2,5,8],
-    [0,4,8], [2,4,6]
-  ];
-  
-  return winPatterns.some(pattern => {
-    const line = pattern.map(i => gameBoard[i]);
-    return line.every(cell => cell === (player || line[0]) && cell !== '');
-  });
-}
-
-function endGame(result) {
-  let message = '';
-  switch(result) {
-    case 'player':
-      message = `Você ganhou ${currentBet * 2} coins!`;
-      userCoins += currentBet * 2;
-      break;
-    case 'ai':
-      message = `Você perdeu ${currentBet} coins!`;
-      break;
-    case 'draw':
-      message = 'Empate! Suas coins foram devolvidas.';
-      userCoins += currentBet;
-      break;
-  }
-  
-  document.getElementById('game-status').textContent = message;
-  document.getElementById('coinCount').textContent = userCoins;
-  localStorage.setItem('userCoins', userCoins);
-  }
-                                  
+    if (gameBoard[i] =
