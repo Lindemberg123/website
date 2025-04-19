@@ -1,8 +1,59 @@
-
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+.floating-elements {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.float-item {
+  position: absolute;
+  animation: float 15s linear infinite;
+  opacity: 0.5;
+  font-size: 24px;
+}
+
+.float-item:nth-child(1) { left: 10%; animation-duration: 20s; }
+.float-item:nth-child(2) { left: 30%; animation-duration: 18s; animation-delay: 2s; }
+.float-item:nth-child(3) { left: 50%; animation-duration: 15s; animation-delay: 4s; }
+.float-item:nth-child(4) { left: 70%; animation-duration: 22s; animation-delay: 6s; }
+.float-item:nth-child(5) { left: 85%; animation-duration: 17s; animation-delay: 8s; }
+.float-item:nth-child(6) { left: 92%; animation-duration: 19s; animation-delay: 10s; }
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-100px) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+header {
+  background: linear-gradient(45deg, #1c1c3c, #2a2a5a);
+  animation: gradientBG 10s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 html {
@@ -54,30 +105,30 @@ body {
   body {
     padding: 10px;
   }
-  
+
   header {
     padding: 20px 10px;
   }
-  
+
   .menu h1 {
     font-size: 1.8rem;
   }
-  
+
   section {
     padding: 15px;
   }
-  
+
   .watch-ad-button, 
   .submit-ad-button {
     padding: 20px;
     font-size: 18px;
   }
-  
+
   #adContainer {
     width: 100%;
     padding: 10px;
   }
-  
+
   .close-button {
     padding: 15px 30px;
     font-size: 18px;
@@ -379,11 +430,30 @@ a:hover {
 }
 
 #adminSection {
-  margin-top: 20px;
+  background: rgba(0, 0, 0, 0.8);
   padding: 20px;
-  background: rgba(255, 0, 0, 0.1);
   border-radius: 10px;
-  border: 2px solid red;
+  margin: 20px 0;
+}
+
+#adminSection input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background: #2a2a2a;
+  border: 1px solid #4caf50;
+  color: white;
+  border-radius: 5px;
+}
+
+.admin-button {
+  background: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
 .admin-link {
@@ -488,6 +558,78 @@ a:hover {
   margin-top: 10px;
 }
 
+.servers-section {
+  background: linear-gradient(45deg, #1c1c3c, #2a2a5a);
+  padding: 30px;
+  margin: 20px 0;
+  border-radius: 15px;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+
+.server-wrapper {
+  display: flex;
+  gap: 20px;
+  animation: slideShow 20s linear infinite;
+}
+
+.server-card {
+  flex: 0 0 300px;
+  background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://cdn.discordapp.com/icons/1178024424256053309/server_icon.png');
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  padding: 20px;
+  white-space: normal;
+}
+
+@keyframes slideShow {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.server-info {
+  text-align: center;
+}
+
+.server-icon {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  margin-bottom: 15px;
+  border: 3px solid #4caf50;
+  box-shadow: 0 0 15px rgba(76, 175, 80, 0.3);
+}
+
+.join-button {
+  display: inline-block;
+  background: #4caf50;
+  color: white;
+  padding: 12px 25px;
+  border-radius: 25px;
+  margin-top: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.join-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+  text-decoration: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  to { transform: translateX(0); }
+}
+
 footer {
   background: #1c1c3c;
   color: #999;
@@ -495,4 +637,211 @@ footer {
   padding: 20px;
   margin-top: 50px;
   border-radius: 10px;
+  position: relative;
+}
+
+.pin-pad {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #2a2a5a;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 1000;
+}
+
+.pin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.pin-grid button {
+  background: #4caf50;
+  border: none;
+  color: white;
+  padding: 20px;
+  font-size: 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pin-grid button:hover {
+  background: #45a049;
+  transform: scale(1.1);
+}
+
+.pin-grid button.active {
+  background: #FFD700;
+}
+
+.pattern-line {
+  position: absolute;
+  height: 2px;
+  background: #FFD700;
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+#pinInput {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+}
+
+.submit-pin {
+  width: 100%;
+  padding: 10px;
+  background: #ffd700;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+
+.economy-menu {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.economy-button {
+  background: #4caf50;
+  color: white;
+  padding: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.2s;
+}
+
+.economy-button:hover {
+  transform: scale(1.05);
+}
+
+.user-info {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  z-index: 1000;
+}
+
+.coins-display {
+  background: rgba(76, 175, 80, 0.2);
+  padding: 5px 10px;
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.auth-container {
+  background: transparent;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 15px;
+  font-size: 14px;
+  background: linear-gradient(45deg, #4caf50, #45a049);
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+  transition: all 0.3s ease;
+  margin: 0;
+  cursor: pointer;
+}
+
+.auth-button::before {
+  content: 'Login';
+  color: white;
+}
+
+.auth-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+#userProfile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#userAvatar {
+  border: 2px solid #4caf50;
+}
+
+#economia {
+  padding: 20px;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 10px;
+  margin: 20px;
+}
+
+.wheel-container {
+  margin: 20px 0;
+}
+
+#wheel-gif {
+  max-width: 300px;
+  border-radius: 10px;
+}
+
+#daily-section {
+  text-align: center;
+  padding: 20px;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.claim-button {
+  background: #ffd700;
+  color: black;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 25px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.claim-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.claim-button:disabled {
+  background: #999;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.reward-result {
+  text-align: center;
+  font-size: 24px;
+  margin: 20px 0;
+  padding: 20px;
+  border-radius: 10px;
+  background: rgba(76, 175, 80, 0.1);
+  display: none;
   }
