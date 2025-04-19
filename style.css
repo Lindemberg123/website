@@ -1,0 +1,498 @@
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+.sponsors-bar {
+  background: white;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.sponsor {
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.sponsor img {
+  height: 100%;
+  object-fit: contain;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.sponsor img:hover {
+  filter: grayscale(0%);
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #0a0a23;
+  color: #ffffff;
+  line-height: 1.6;
+  overflow-y: auto;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 10px;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+  
+  header {
+    padding: 20px 10px;
+  }
+  
+  .menu h1 {
+    font-size: 1.8rem;
+  }
+  
+  section {
+    padding: 15px;
+  }
+  
+  .watch-ad-button, 
+  .submit-ad-button {
+    padding: 20px;
+    font-size: 18px;
+  }
+  
+  #adContainer {
+    width: 100%;
+    padding: 10px;
+  }
+  
+  .close-button {
+    padding: 15px 30px;
+    font-size: 18px;
+  }
+}
+
+header {
+  background: #1c1c3c;
+  padding: 40px 20px;
+  text-align: center;
+  border-bottom: 3px solid #4caf50;
+  border-radius: 0 0 15px 15px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: linear-gradient(45deg, #1c1c3c, #2a2a5a);
+  padding: 10px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.menu-dots {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(76, 175, 80, 0.2);
+  padding: 8px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.menu-dots:hover {
+  background: rgba(76, 175, 80, 0.4);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.menu-dots button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  right: 0;
+  background: linear-gradient(135deg, #2a2a5a, #1c1c3c);
+  min-width: 200px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  z-index: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.dropdown-content.show {
+  transform: translateY(0);
+  animation: dropdownFade 0.3s ease;
+}
+
+@keyframes dropdownFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-content a {
+  color: white;
+  padding: 15px 20px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  text-align: left;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.dropdown-content a:last-child {
+  border-bottom: none;
+}
+
+.dropdown-content a:hover {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  padding-left: 25px;
+  text-decoration: none;
+}
+
+.show {
+  display: block;
+}
+
+header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+main {
+  padding: 20px 0;
+}
+
+section {
+  background: #1c1c3c;
+  margin-bottom: 30px;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.ad-space {
+  background: #242450;
+  padding: 15px;
+  margin: 20px 0;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px dashed #4caf50;
+  transition: transform 0.2s;
+}
+
+.ad-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.ad-space {
+  position: relative;
+  min-height: 250px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 20px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.ad-space .ad-link {
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 12px;
+  transform: translateY(30px);
+  transition: transform 0.3s ease;
+}
+
+.ad-space:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.ad-space:hover .ad-link {
+  transform: translateY(0);
+}
+
+.ad-button {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 10px 25px;
+  background: #4caf50;
+  color: white;
+  border-radius: 25px;
+  font-weight: bold;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+}
+
+.ad-space:hover .ad-button {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ad-button:hover {
+  background: #45a049;
+  transform: scale(1.05);
+}
+
+section h2 {
+  color: #4caf50;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #4caf50;
+  padding-bottom: 10px;
+}
+
+ul {
+  list-style: none;
+  margin: 10px 0;
+}
+
+li {
+  margin: 8px 0;
+}
+
+a {
+  color: #4caf50;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: #5dbd60;
+  text-decoration: underline;
+}
+
+#adContainer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.9);
+  padding: 20px;
+  border-radius: 10px;
+  display: none;
+  width: 95%;
+  max-width: 640px;
+}
+
+#adContainer .close-button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: #ff0000;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  z-index: 1001;
+  touch-action: manipulation;
+}
+
+.coins-info {
+  text-align: center;
+  padding: 20px;
+}
+
+.watch-ad-button, .submit-ad-button {
+  background: #4caf50;
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 20px 0;
+  font-size: 16px;
+  width: 100%;
+  transition: background 0.3s;
+}
+
+.watch-ad-button:hover, .submit-ad-button:hover {
+  background: #45a049;
+}
+
+.reward-button {
+  background: #ffd700;
+  color: black;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#placeAdSection {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 10px;
+}
+
+#placeAdSection input,
+#placeAdSection textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: 1px solid #4caf50;
+}
+
+#adminSection {
+  margin-top: 20px;
+  padding: 20px;
+  background: rgba(255, 0, 0, 0.1);
+  border-radius: 10px;
+  border: 2px solid red;
+}
+
+.admin-link {
+  color: #ff0000 !important;
+  font-weight: bold;
+}
+
+.drop-button {
+  background: #ffd700;
+  color: black;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 20px auto;
+  display: block;
+  font-weight: bold;
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.drop-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.drop-button:disabled {
+  cursor: not-allowed;
+  background: #999;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 300px;
+  margin: 20px auto;
+}
+
+.cell {
+  background: #2a2a5a;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.cell:hover {
+  background: #3a3a6a;
+}
+
+.game-button {
+  background: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 10px;
+  font-size: 16px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #1c1c3c;
+  padding: 20px;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.modal-content input {
+  margin: 10px 0;
+  padding: 5px;
+  width: 200px;
+}
+
+.admin-button {
+  background: red;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+footer {
+  background: #1c1c3c;
+  color: #999;
+  text-align: center;
+  padding: 20px;
+  margin-top: 50px;
+  border-radius: 10px;
+  }
