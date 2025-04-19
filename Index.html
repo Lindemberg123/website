@@ -8,6 +8,14 @@
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1234567890123456" crossorigin="anonymous"></script>
 </head>
 <body>
+  <div class="floating-elements">
+    <div class="float-item">🚀</div>
+    <div class="float-item">⭐</div>
+    <div class="float-item">🌟</div>
+    <div class="float-item">🎮</div>
+    <div class="float-item">💫</div>
+    <div class="float-item">🎯</div>
+  </div>
   <div class="sponsors-bar">
     <div class="sponsor">
       <img src="https://logodownload.org/wp-content/uploads/2019/08/latam-logo.png" alt="LATAM" />
@@ -25,12 +33,26 @@
   <header>
     <nav class="menu">
       <h1>🚀 Astronaut Bot</h1>
+      <div class="user-info">
+        <div class="coins-display">
+          <span>💰 Coins: <span id="coinCount">0</span></span>
+        </div>
+        <div class="auth-container">
+          <div id="userProfile" style="display: none;">
+            <img id="userAvatar" src="" alt="Avatar" style="width: 32px; height: 32px; border-radius: 50%;">
+            <span id="userName"></span>
+          </div>
+          <div id="loginButton" class="auth-button">
+            <button onclick="window.loginWithReplit()">Login with Replit</button>
+          </div>
+        </div>
+      </div>
       <div class="menu-dots">
-        <button onclick="toggleMenu()">⋮</button>
+        <button onclick="toggleMenu()" type="button">⋮</button>
         <div id="menuDropdown" class="dropdown-content">
           <a href="#" onclick="showSection('sobre')">Sobre Mim</a>
           <a href="#" onclick="showSection('patrocinios')">Patrocínios</a>
-          <a href="#" onclick="showSection('coins')" class="admin-link">Coins</a>
+          <a href="#" onclick="showSection('economia')">Economia</a>
           <a href="#" onclick="showSection('jogo')">Jogo da Velha AI</a>
         </div>
       </div>
@@ -101,18 +123,59 @@
         <button onclick="submitAd()" class="submit-ad-button">Enviar Anúncio</button>
       </div>
 
-      <div id="adminSection" style="display:none;">
-        <h3>Coins</h3>
-        <input type="text" id="adminCommand" placeholder="Digite um comando">
-        <button onclick="executeCommand()" class="admin-button">Executar</button>
-      </div>
+      </section>
 
-    </section>
+    <div id="adminSection" style="display:none;">
+      <h3>Coins</h3>
+      <input type="text" id="adminCommand" placeholder="Digite um comando">
+      <button onclick="executeCommand()" class="admin-button">Executar</button>
+    </div>
   </main>
 
   <footer>
-    <p>© 2025 <span onclick="document.getElementById('adminSection').style.display='block'" style="cursor:pointer">cria do rj</span> • Todos os direitos reservados.</p>
-  </footer>
+    <p onclick="showPinPad()">© 2025 cria do rj • Todos os direitos reservados.</p>
+    <div id="pinPad" style="display:none;" class="pin-pad">
+      <div class="pin-grid">
+        <button onclick="addPin('1')">1</button>
+        <button onclick="addPin('2')">2</button>
+        <button onclick="addPin('3')">3</button>
+        <button onclick="addPin('4')">4</button>
+        <button onclick="addPin('5')">5</button>
+        <button onclick="addPin('6')">6</button>
+        <button onclick="addPin('7')">7</button>
+        <button onclick="addPin('8')">8</button>
+        <button onclick="addPin('9')">9</button>
+      </div>
+      <input type="password" id="pinInput" readonly>
+      <button onclick="checkPin()" class="submit-pin">Enviar</button>
+    </div>
+  <section id="servers" class="servers-section">
+    <h2>🌟 Servidores oficiais</h2>
+    <div class="server-wrapper">
+      <div class="server-card">
+        <div class="server-info">
+          <img src="https://cdn.discordapp.com/icons/1178024424256053309/server_icon.png" alt="Server Icon" class="server-icon">
+          <h3>X-Line VRK</h3>
+          <a href="https://discord.gg/x-line-vrk-fechada-x-1178024424256053309" target="_blank" class="join-button">Entrar no servidor</a>
+        </div>
+      </div>
+      <div class="server-card">
+        <div class="server-info">
+          <img src="https://cdn.discordapp.com/icons/server_id/server_icon.png" alt="Server Icon" class="server-icon">
+          <h3>Sz9 LINE</h3>
+          <a href="https://discord.gg/aGrYVsXM" target="_blank" class="join-button">Entrar no servidor</a>
+        </div>
+      </div>
+      <div class="server-card">
+        <div class="server-info">
+          <img src="https://cdn.discordapp.com/icons/server_id/server_icon.png" alt="Server Icon" class="server-icon">
+          <h3>Servidor 3</h3>
+          <a href="https://discord.gg/WehrrMWs" target="_blank" class="join-button">Entrar no servidor</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</footer>
   <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
   <div id="adContainer" style="display: none;">
     <video id="videoElement">
@@ -129,6 +192,32 @@
     <button onclick="startGame('medium')" class="game-button">Médio</button>
     <button onclick="startGame('hard')" class="game-button">Hardcore</button>
   </div>
+</section>
+
+<section id="economia" style="display:none;">
+  <h2>💰 Economia</h2>
+  <div class="economy-menu">
+    <button onclick="showDaily()" class="economy-button">Daily Rewards 🎁</button>
+    <button onclick="showShop()" class="economy-button">Loja 🛍️</button>
+    <button onclick="showInventory()" class="economy-button">Inventário 📦</button>
+    <button onclick="showProfile()" class="economy-button">Perfil 👤</button>
+  </div>
+
+  <div id="daily-section">
+    <h3>Daily Rewards</h3>
+    <p>Próximo daily disponível em: <span id="daily-timer">Carregando...</span></p>
+    <div class="wheel-container">
+      <img src="https://i.imgur.com/Lz4spU6.gif" 
+           id="wheel-gif" 
+           style="display:none;"
+           onerror="this.src='https://i.imgur.com/JxHPE6J.gif'">
+      <button onclick="claimDaily()" id="claim-daily" class="claim-button">Pegar Daily</button>
+    </div>
+    <div id="reward-result" class="reward-result"></div>
+  </div>
+</section>
+
+  </div>
   <div id="bet-modal" class="modal">
     <div class="modal-content">
       <h3>Quanto deseja apostar?</h3>
@@ -138,5 +227,4 @@
   </div>
   <div id="game-board" class="game-board"></div>
   <div id="game-status"></div>
-                                                                           </section>
-  
+  </section>
